@@ -13,7 +13,7 @@ Roku app for watching the Masters.com streams and videos with leaderboards.
 # Installation
 
 1. download the latest release at [Releases](https://github.com/samheavner/sams-masters-app/releases)
-1. side-load the `.zip` file on your Roku device (see [Roku's developer guide](https://developer.roku.com/docs/developer-program/getting-started/side-loading.md) for instructions)
+1. side-load the `.zip` file on your Roku device (see [Roku's developer guide](https://developer.roku.com/docs/developer-program/getting-started/developer-setup.md) for instructions)
 1. enjoy
 
 Before you ask, no private channels will be provided. You must side-load the app yourself with the above instructions.
