@@ -2,7 +2,7 @@
 
 Roku app for watching the Masters.com streams and videos with leaderboards.
 
-*Buy Me A Beer or a Tee Time* venmo: `@Sam-Heavner`
+**Buy Me A Beer or a Tee Time** - venmo: `@Sam-Heavner`
 
 ### Live Stream and Masters Vault
 
