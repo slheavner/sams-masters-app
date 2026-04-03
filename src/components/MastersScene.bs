@@ -1,0 +1,261 @@
+function init()
+  m.api = m.top.findNode("api")
+  m.video = m.top.findNode("video")
+  m.app = m.top.findNode("app")
+  m.hint = m.top.findNode("hint")
+  m.leaderboard = m.top.findNode("leaderboard")
+  m.videoLeaderboard = m.top.findNode("videoLeaderboard")
+  m.videoLeaderboard.observeFieldScoped("focusedChild", "onVideoLeaderboardFocused")
+  m.video.observeFieldScoped("focusedChild", "onVideoFocused")
+
+  m.button = m.top.findNode("button")
+  m.video.trickplayBar.update({
+    filledBarBlendColor: "#fce300"
+  })
+  m.button.observeFieldScoped("selected", "onButtonSelected")
+
+  m.video.observeFieldScoped("content", "onContentChanged")
+  onContentChanged()
+  m.api@.getLiveStreams().observeFieldScoped("resolve", "onLiveStreams")
+  m.api@.getScores().observeFieldScoped("resolve", "onScores")
+  m.root = createObject("roSGNode", "ContentNode")
+  m.video.observeFieldScoped("", "onVideoEvent")
+  m.hintTimer = createObject("roSGNode", "Timer")
+  m.hintTimer.update({
+    duration: "5"
+    repeat: "false"
+    control: "start"
+  })
+  m.hintTimer.observeFieldScoped("fire", "onHintFire")
+  m.liveTimer = createObject("roSGNode", "Timer")
+  m.liveTimer.update({
+    duration: "15"
+    repeat: "true"
+    control: "start"
+  })
+  m.liveTimer.observeFieldScoped("fire", "onTimerFire")
+end function
+
+function onVideoLeaderboardFocused()
+  if m.videoLeaderboard.isInFocusChain() then
+    m.video.update({
+      width: 1280 - 96
+      height: 720 - 53
+    })
+  else
+    m.video.update({
+      width: 1920
+      height: 1080
+    })
+  end if
+end function
+
+function onVideoFocused()
+  if m.video.isInFocusChain() then
+    m.hintTimer.control = "stop"
+    m.hintTimer.control = "start"
+    m.hint.visible = true
+  else
+    m.hint.visible = false
+  end if
+end function
+
+function onHintFire()
+  m.hint.visible = false
+end function
+
+function onScores(event) as void
+  scores = event.getData()
+  if scores.data = invalid or scores.data.isEmpty() then
+    m.leaderboard.visible = false
+    return
+  end if
+  m.leaderboard.scores = scores
+  m.videoLeaderboard.scores = scores
+  m.leaderboard.visible = true
+end function
+
+function onTimerFire()
+  m.api@.getLiveStreams().observeFieldScoped("resolve", "onUpdateLiveStreams")
+  m.api@.getScores().observeFieldScoped("resolve", "onScores")
+end function
+
+function onUpdateLiveStreams(event)
+  row = parseLiveStreams(event)
+  for each item in row.getChildren(-1, 0)
+    found = invalid
+    for each child in m.livefeeds.content.getChild(0).getChildren(-1, 0)
+      if child.id = item.id then
+        fields = item.getFields()
+        fields.delete("change")
+        fields.delete("focusedChild")
+        child.update(fields)
+        found = child
+        exit for
+      end if
+    end for
+    if found = invalid then
+      m.livefeeds.content.appendChild(item)
+    end if
+  end for
+  for each child in m.livefeeds.content.getChild(0).getChildren(-1, 0)
+    found = invalid
+    for each item in row.getChildren(-1, 0)
+      if child.id = item.id then
+        found = child
+        exit for
+      end if
+    end for
+    if found = invalid then
+      m.livefeeds.content.removeChild(child)
+    end if
+  end for
+  reorderLiveStreams()
+end function
+
+function reorderLiveStreams()
+  live = []
+  notlive = []
+  row = m.livefeeds.content.getChild(0)
+  broadcast = invalid
+  for each item in row.getChildren(-1, 0)
+    if item.active = true then
+      if item.id = "simul" then
+        broadcast = item
+      else
+        live.push(item)
+      end if
+    else
+      notlive.push(item)
+    end if
+  end for
+  row.removeChildrenIndex(-1, 0)
+  if broadcast <> invalid
+    row.appendChild(broadcast)
+  end if
+  row.appendChildren(live)
+  row.appendChildren(notlive)
+end function
+
+function onButtonSelected()
+  m.video.setFocus(true)
+  m.app.visible = false
+end function
+
+function onContentChanged()
+  content = m.video.content
+  m.button.visible = content <> invalid
+end function
+
+
+function parseLiveStreams(event)
+  response = event.getData()
+  content = createObject("roSGNode", "ContentNode")
+  content.title = "Live Streams"
+
+  for each channel in response.channels
+
+    node = createObject("roSGNode", "ContentNode")
+    node.id = channel.channelId
+    node.title = channel.name
+    node.hdPosterUrl = channel.imagePath
+    node.description = channel.caption
+    node.shortDescriptionLine1 = channel.carousel_header
+    node.shortDescriptionLine2 = channel.carousel_title
+    node.playStart = 999999
+
+    ' Map the first available desktop URL as the stream URL
+    if channel.desktop <> invalid and channel.desktop.count() > 0
+      node.url = channel.desktop[0].url
+    end if
+    node.live = true
+    node.addFields({
+      active: channel.live
+    })
+    if node.id <> "radio"
+      content.insertChild(node, 0)
+    end if
+  end for
+  return content
+end function
+
+function onLiveStreams(event)
+  m.root.appendChild(parseLiveStreams(event))
+  m.livefeeds = m.top.findNode("livefeeds")
+  getVideoVault()
+end function
+
+function getVideoVault()
+  m.api@.getVideoVault().observeFieldScoped("resolve", "onVideoVault")
+end function
+
+function onVideoVault(event)
+  response = event.getData()
+
+  for each category in response.content[2].videoPlaylist
+    row = createObject("roSGNode", "ContentNode")
+    row.title = category.title
+
+    for each video in category.items
+      node = createObject("roSGNode", "ContentNode")
+      node.id = video.id
+      node.title = video.title
+      node.description = video.description
+      node.hdPosterUrl = video.thumbImage
+      node.length = video.metadata.duration
+      node.url = video.media.m3u8 ?? video.media.mp4
+      row.appendChild(node)
+    end for
+
+    if row.getChildCount() > 0
+      m.root.appendChild(row)
+    end if
+  end for
+
+  m.livefeeds.content = m.root
+  m.livefeeds.setFocus(true)
+  m.livefeeds.observeFieldScoped("rowItemSelected", "onRowItemSelected")
+end function
+
+
+function onRowItemSelected(event)
+  index = event.getData()
+  content = m.livefeeds.content.getChild(index[0]).getChild(index[1])
+  m.video.content = content
+  m.video.control = "play"
+  onButtonSelected()
+end function
+
+
+function onKeyEvent(key, press) as boolean
+  if press then
+    if key = "up" then
+      if m.livefeeds.isInFocusChain() and m.button.visible then
+        m.button.setFocus(true)
+        return true
+      end if
+    end if
+    if key = "down" then
+      if m.button.isInFocusChain() then
+        m.livefeeds.setFocus(true)
+        return true
+      end if
+      if m.video.isInFocusChain() then
+        m.videoLeaderboard.setFocus(true)
+        return true
+      end if
+    end if
+    if key = "back" then
+      if m.video.isInFocusChain() then
+        m.app.visible = true
+        m.livefeeds.setFocus(true)
+        return true
+      end if
+      if m.videoLeaderboard.isInFocusChain() then
+        m.video.setFocus(true)
+        return true
+      end if
+    end if
+  end if
+  return false
+end function

@@ -1,0 +1,17 @@
+{
+  "autoImportComponentScript": true,
+  "plugins": [
+    "brighterscript-xml-plugin"
+  ],
+  "sourceMap": true,
+  "rootDir": "src",
+  "stagingDir": ".stage",
+  "retainStagingDir": true,
+  "files": [
+    "manifest",
+    "source/**/*.*",
+    "components/**/*.*",
+    "images/**/*.*",
+    "fonts/**/*.*"
+  ]
+}

@@ -1,0 +1,46 @@
+<component name="VideoLeaderboard"
+           extends="Group"
+           >
+  <interface>
+    <field id="scores"
+           type="assocarray"
+           />
+  </interface>
+  <children>
+    <Rectangle width="1920"
+               height="1080"
+               color="#ffffff"
+               >
+      <Group translation="[0, 667]">
+        <PlayerCard id="playerCard"></PlayerCard>
+      </Group>
+      <Group translation="[1184, 0]">
+
+        <SimpleLabel id="title"
+                     fontSize="64"
+                     height="100"
+                     width="736"
+                     vertAlign="bottom"
+                     horizAlign="center"
+                     color="#138A60"
+                     fontName="nimbus"
+                     />
+        <Rectangle height="2"
+                   translation="[0, 98]"
+                   width="736"
+                   opacity="0.85"
+                   color="#1C1E1F"
+                   />
+        <MarkupList id="list"
+                    translation="[0, 100]"
+                    focusBitmapUri="pkg:"
+                    itemSize="[736, 50]"
+                    numRows="18"
+                    drawFocusFeedback="false"
+                    vertFocusAnimationStyle="floatingFocus"
+                    itemComponentName="VideoLeaderboardRow"
+                    />
+      </Group>
+    </Rectangle>
+  </children>
+</component>

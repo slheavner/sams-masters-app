@@ -1,0 +1,26 @@
+function init()
+  m.top.observeField("focusedChild", "onFocusChanged")
+  onFocusChanged()
+end function
+
+
+function onFocusChanged()
+  if m.top.isInFocusChain() then
+    m.poster.opacity = 1.0
+    m.poster.blendColor = "#fce300"
+    m.label.color = "#107d57"
+  else
+    m.poster.opacity = 0.25
+    m.poster.blendColor = "#ffffff"
+    m.label.color = "#ffffff"
+  end if
+end function
+
+function onKeyEvent(key, press) as boolean
+  if key = "OK" and press then
+    m.top.selected = true
+    return true
+  end if
+  return false
+end function
+

@@ -1,0 +1,74 @@
+<component name="MastersScene"
+           extends="Scene"
+           >
+
+  <children>
+    <MastersApiService id="api" />
+    <VideoLeaderboard id="videoLeaderboard"
+                      translation="[0, 0]"
+                      />
+
+    <Video id="video"
+           width="1920"
+           height="1080"
+           visible="true"
+           >
+      <SimpleLabel id="hint"
+                   text="Press DOWN for Leaderboard"
+                   width="1920"
+                   height="1000"
+                   horizAlign="center"
+                   vertAlign="bottom"
+                   ></SimpleLabel>
+    </Video>
+    <Group id="app">
+      <Rectangle color="#173A26"
+                 width="1920"
+                 height="1080"
+                 opacity="0.75"
+                 />
+      <Poster loadDisplayMode="scaleToFit"
+              uri="https://www.masters.com/assets/images/nav/masters_logo_2023.png"
+              width="1920"
+              height="75"
+              translation="[0, 24]"
+              />
+      <LayoutGroup horizAlignment="center"
+                   translation="[960, 130]"
+                   >
+        <SimpleButton id="button"
+                      text="Return to Video"
+                      />
+      </LayoutGroup>
+
+      <RowList id="livefeeds"
+               focusBitmapBlendColor="#fce300"
+               itemSize="[1820, 440]"
+               rowSpacings="[30]"
+               rowCounterRightOffset="100"
+               showRowCounter="[true]"
+               itemSpacing="[0, 30]"
+               rowItemSpacing="[[30, 30]]"
+               columnSpacings="[30]"
+               rowFocusAnimationStyle="fixedFocus"
+               rowLabelOffset="[[0, 12]]"
+               rowItemSize="[[640, 360]]"
+               itemComponentName="SimpleItem"
+               translation="[100, 200]"
+               numRows="2"
+               showRowLabel="[true]"
+               >
+        <Font uri="pkg:/fonts/nimbus-regular.ttf"
+              size="40"
+              role="rowLabelFont"
+              />
+      </RowList>
+      <SmallLeaderboard id="leaderboard"
+                        visible="false"
+                        translation="[1620, 650]"
+                        />
+    </Group>
+
+  </children>
+
+</component>

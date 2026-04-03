@@ -1,0 +1,37 @@
+<component name="SmallLeaderboard"
+           extends="Group"
+           >
+  <interface>
+    <field id="scores"
+           type="assocarray"
+           />
+  </interface>
+  <children>
+    <Rectangle height="350"
+               width="280"
+               opacity="0.85"
+               color="#ffffff"
+               >
+      <LayoutGroup id="body"
+                   layoutDirection="vert"
+                   >
+        <SimpleLabel id="title"
+                     fontSize="28"
+                     height="42"
+                     width="280"
+                     vertAlign="bottom"
+                     horizAlign="center"
+                     color="#138A60"
+                     fontName="nimbus"
+                     />
+        <Rectangle height="2"
+                   width="280"
+                   opacity="0.85"
+                   color="#1C1E1F"
+                   />
+        <Rectangle height="2" />
+      </LayoutGroup>
+
+    </Rectangle>
+  </children>
+</component>

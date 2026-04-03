@@ -1,0 +1,96 @@
+function init()
+  m.list = m.top.findNode("list")
+  m.title = m.top.findNode("title")
+  m.playerCard = m.top.findNode("playerCard")
+  m.top.observeFieldScoped("scores", "onScores")
+  m.top.observeFieldScoped("focusedChild", "onFocusedChild")
+  m.list.observeFieldScoped("itemFocused", "onItemFocused")
+end function
+
+function onItemFocused()
+  if m.list.content <> invalid then
+    m.playerCard.content = m.list.content.getChild(m.list.itemFocused)
+  end if
+end function
+
+function onFocusedChild()
+  if m.top.hasFocus() then
+    m.list.setFocus(true)
+  end if
+end function
+
+function onScores()
+  content = scoresToNodes()
+  if m.list.content <> invalid then
+    reorderMap = []
+    for each child in content.getChildren(-1, 0)
+      for each row in m.list.content.getChildren(-1, 0)
+        if row.id = child.id then
+          fields = child.getFields()
+          fields.delete("change")
+          fields.delete("focusedChild")
+          row.update(fields)
+          reorderMap.push(row)
+          exit for
+        end if
+      end for
+    end for
+    if m.newIndex <> invalid then
+      m.list.animateToItem = m.newIndex
+      m.newIndex = invalid
+    end if
+    m.list.content.insertChildren(reorderMap, 0)
+  else
+    m.list.content = content
+  end if
+  m.title.text = content.title
+end function
+
+function scoresToNodes() as object
+  scores = m.top.scores
+  roundId = getRoundId(scores)
+  if roundId = invalid then
+    return invalid
+  end if
+  currentPlayer = invalid
+  if m.top.isInFocusChain()
+    currentPlayer = m.list.content.getChild(m.list.itemFocused).id
+  end if
+  root = createObject("roSGNode", "ContentNode")
+  root.title = `Round ${roundId}`
+  key = `round${roundId}`
+  lastPlace = "-1"
+  for i = 0 to scores.data.player.count() - 1
+    player = scores.data.player[i]
+    row = createObject("roSGNode", "ContentNode")
+    if currentPlayer <> invalid and player.id = currentPlayer
+      m.newIndex = i
+    end if
+    golfer = {
+      id: player.id
+      place: player.pos = lastPlace ? "" : player.pos.replace("T", "")
+      name: player.display_name
+      score: player.topar
+      thru: player[key].roundStatus = "Pre" ? player[key].teetime : (player.thru = "F" or player.thru = "F*" ? player[key].total.toStr() : player.thru.replace("*", ""))
+      playerData: player
+    }
+    row.update(golfer, true)
+    root.appendChild(row)
+    lastPlace = player.pos
+  end for
+  return root
+end function
+
+function getRoundId(scores)
+  index = -1
+  split = scores.data.currentRound.split("")
+  for i = 0 to 3
+    if split[i] = "1" then
+      index = i + 1
+    end if
+  end for
+  if index = -1 then
+    return invalid
+  end if
+  return index
+end function

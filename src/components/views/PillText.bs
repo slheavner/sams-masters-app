@@ -1,0 +1,18 @@
+function init()
+  m.label = m.top.findNode("label")
+  m.poster = m.top.findNode("poster")
+  m.top.observeField("text", "onText")
+  m.top.observeField("textSize", "onText")
+end function
+
+
+function onText()
+  m.label.text = m.top.text
+  w = m.label.boundingRect().width
+  h = m.label.boundingRect().height
+  m.poster.update({
+    width: w + 40
+    height: h + 10
+    translation: [-20, -5]
+  })
+end function

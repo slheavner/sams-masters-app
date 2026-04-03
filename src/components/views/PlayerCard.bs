@@ -1,0 +1,121 @@
+import "pkg:/components/utils/CountryCodes.bs"
+
+function init()
+  m.codes = new CountryCodes()
+  m.portrait = m.top.findNode("portrait")
+  m.name = m.top.findNode("name")
+  m.score = m.top.findNode("score")
+  m.thru = m.top.findNode("thru")
+  m.thruText = m.top.findNode("thruText")
+  m.position = m.top.findNode("position")
+  m.flag = m.top.findNode("flag")
+  m.scorecard = m.top.findNode("scorecard")
+  m.country = m.top.findNode("country")
+  m.today = m.top.findNode("today")
+  m.top.observeFieldScoped("content", "onContent")
+  m.pars = [4, 5, 4, 3, 4, 3, 4, 5, 4, 4, 4, 3, 5, 4, 5, 3, 4, 4]
+  static = [
+    ["Hole", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "Total"]
+    ["Par", "4", "5", "4", "3", "4", "3", "4", "5", "4", "4", "4", "3", "5", "4", "5", "3", "4", "4", "72"]
+    ["R1"]
+    ["R2"]
+    ["R3"]
+    ["R4"]
+  ]
+
+
+
+  for i = 0 to 5
+    group = m.scorecard.createChild("LayoutGroup")
+    group.update({
+      layoutDirection: "horiz"
+      itemSpacings: [1]
+    })
+    for j = 0 to 19
+      text = static[i][j]
+
+      width = j = 0 or j = 19 ? 84 : 42
+      height = 40
+      color = i = 0 ? "#0B5637" : (i = 1 ? "#173A26" : "#ffffff")
+      textColor = i < 2 ? "#EFEFEF" : "#0B5637"
+      rect = group.createChild("Rectangle")
+      rect.update({
+        width: width
+        height: height
+        color: color
+      })
+      label = rect.createChild("SimpleLabel")
+      label.update({
+        width: width
+        height: height
+        color: textColor
+        fontSize: 20
+        vertAlign: "center"
+        horizAlign: "center"
+        fontWeight: "bold"
+        text: text ?? ""
+      })
+      if i > 1 then
+        scorePoster = rect.createChild("Poster")
+        scorePoster.update({
+          width: 36
+          height: 36
+          translation: [3, 2]
+          blendColor: textColor
+          visible: false
+        })
+      end if
+    end for
+  end for
+end function
+
+function onContent()
+  content = m.top.content
+  player = content.playerData
+  m.portrait.uri = `https://images.masters.com/players/2026/240x240/${content.id}.jpg`
+  m.name.text = player.full_name
+  m.position.text = player.pos
+  m.score.text = player.topar
+  m.score.color = m.score.text.startsWith("-") ? "#cd2b2bff" : "#1C1E1F"
+  m.today.text = player.today
+  m.today.color = m.today.text.startsWith("-") ? "#cd2b2bff" : "#1C1E1F"
+  if len(content.thru) > 2 then
+    m.thruText.text = "Tee Time"
+    m.thru.text = content.thru.replace(" ", "")
+  else
+    m.thruText.text = "Thru"
+    m.thru.text = player.thru
+  end if
+  m.flag.uri = `https://www.masters.com/assets/images/flags/${player.countryCode}_sm.gif`
+  m.country.text = ucase(player.countryName)
+  for i = 1 to 4
+    round = player[`round${i}`]
+    row = m.scorecard.getChild(i + 1)
+    for s = 0 to 17
+      score = round.scores[s]
+      if score <> invalid then
+        diff = score - m.pars[s]
+        row.getChild(s + 1).getChild(0).text = score.toStr()
+        poster = row.getChild(s + 1).getChild(1)
+        if diff = -1 then
+          url = "birdie"
+        else if diff < -1 then
+          url = "eagle"
+        else if diff = 1 then
+          url = "bogey"
+        else if diff > 1 then
+          url = "doublebogey"
+        else
+          url = ""
+        end if
+        poster.update({
+          uri: `pkg:/images/${url}.png`
+          visible: url <> ""
+        })
+      end if
+    end for
+    if round.total <> invalid then
+      row.getChild(19).getChild(0).text = round.total.toStr()
+    end if
+  end for
+end function

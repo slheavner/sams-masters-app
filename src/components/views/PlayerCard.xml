@@ -1,0 +1,139 @@
+<component name="PlayerCard"
+           extends="Group"
+           >
+  <interface>
+    <field id="content"
+           type="node"
+           />
+  </interface>
+  <children>
+    <Rectangle width="1184"
+               translation="[0,110]"
+               height="500"
+               color="#EFEFEF"
+               >
+      <LayoutGroup id="scorecard"
+                   layoutDirection="vert"
+                   horizAlignment="center"
+                   itemSpacings="[1]"
+                   translation="[592, 0]"
+                   >
+      </LayoutGroup>
+    </Rectangle>
+    <LayoutGroup layoutDirection="horiz"
+                 vertAlignment="center"
+                 translation="[5, 55]"
+                 >
+
+      <MaskGroup maskSize="[100, 100]"
+                 maskUri="pkg:/images/circle-mask.png"
+                 >
+        <Poster id="portrait"
+                width="100"
+                height="100"
+                loadDisplayMode="scaleToZoom"
+                />
+      </MaskGroup>
+      <Rectangle width="12" />
+      <LayoutGroup layoutDirection="vert">
+        <SimpleLabel id="name"
+                     translation="[125, 55]"
+                     fontName="nimbus"
+                     color="#138A60"
+                     fontSize="40"
+                     fontWeight="bold"
+                     />
+        <LayoutGroup layoutDirection="horiz"
+                     vertAlignment="center"
+                     >
+          <Poster id="flag"
+                  height="15"
+                  width="25"
+                  loadDisplayMode="scaleToFit"
+                  />
+          <Rectangle width="5" />
+          <SimpleLabel id="country"
+                       fontSize="12"
+                       color="#138A60"
+                       ></SimpleLabel>
+        </LayoutGroup>
+      </LayoutGroup>
+
+    </LayoutGroup>
+    <LayoutGroup layoutDirection="horiz"
+                 vertAlignment="center"
+                 horizAlignment="right"
+                 translation="[1164,55]"
+                 >
+      <Group>
+        <SimpleLabel text="Position"
+                     fontSize="12"
+                     width="120"
+                     horizAlign="center"
+                     color="#1C1E1F"
+                     opacity="0.8"
+                     />
+        <SimpleLabel id="position"
+                     translation="[0, 15]"
+                     fontSize="36"
+                     fontWeight="bold"
+                     horizAlign="center"
+                     color="#1C1E1F"
+                     width="120"
+                     />
+      </Group>
+      <Group>
+        <SimpleLabel text="Today"
+                     fontSize="12"
+                     width="120"
+                     horizAlign="center"
+                     color="#1C1E1F"
+                     opacity="0.8"
+                     />
+        <SimpleLabel id="today"
+                     translation="[0, 15]"
+                     fontSize="36"
+                     fontWeight="bold"
+                     horizAlign="center"
+                     color="#1C1E1F"
+                     width="120"
+                     />
+      </Group>
+      <Group>
+        <SimpleLabel id="thruText"
+                     text="Thru"
+                     fontSize="12"
+                     width="140"
+                     horizAlign="center"
+                     color="#1C1E1F"
+                     opacity="0.8"
+                     />
+        <SimpleLabel id="thru"
+                     translation="[0, 15]"
+                     fontSize="36"
+                     fontWeight="bold"
+                     horizAlign="center"
+                     color="#1C1E1F"
+                     width="140"
+                     />
+      </Group>
+      <Group>
+        <SimpleLabel text="Total"
+                     fontSize="12"
+                     width="120"
+                     horizAlign="center"
+                     color="#1C1E1F"
+                     opacity="0.8"
+                     />
+        <SimpleLabel id="score"
+                     translation="[0, 15]"
+                     fontSize="36"
+                     fontWeight="bold"
+                     horizAlign="center"
+                     color="#1C1E1F"
+                     width="120"
+                     />
+      </Group>
+    </LayoutGroup>
+  </children>
+</component>

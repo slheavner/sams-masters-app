@@ -1,0 +1,14 @@
+<component name="SimpleButton"
+           extends="PillText"
+           >
+
+  <interface>
+    <field id="selected"
+           type="boolean"
+           alwaysNotify="true"
+           />
+  </interface>
+  <children>
+  </children>
+
+</component>

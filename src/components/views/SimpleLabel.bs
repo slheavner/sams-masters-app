@@ -1,0 +1,12 @@
+function init()
+  m.top.observeFieldScoped("fontSize", "setFont")
+  m.top.observeFieldScoped("fontName", "setFont")
+  m.top.observeFieldScoped("fontWeight", "setFont")
+end function
+
+function setFont()
+  m.top.font.update({
+    size: m.top.fontSize
+    uri: `pkg:/fonts/${m.top.fontName}-${m.top.fontWeight}.ttf`
+  })
+end function

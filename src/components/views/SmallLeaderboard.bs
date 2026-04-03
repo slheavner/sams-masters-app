@@ -1,0 +1,48 @@
+function init()
+  m.body = m.top.findNode("body")
+  m.title = m.top.findNode("title")
+  m.top.observeFieldScoped("scores", "onScores")
+end function
+
+function onScores() as void
+  scores = m.top.scores
+  roundId = getRoundId(scores)
+  if roundId = invalid then
+    return
+  end if
+  m.title.text = `Round ${roundId}`
+  key = `round${roundId}`
+  lastPlace = "-1"
+  rows = []
+  for i = 0 to 9
+    player = scores.data.player[i]
+    row = createObject("roSGNode", "SmallLeaderboardRow")
+    golfer = {
+      place: player.pos = lastPlace ? "" : player.pos
+      name: player.display_name
+      score: player.topar
+      thru: player[key].roundStatus = "Pre" ? player[key].teetime : (player.thru = "F" or player.thru = "F*" ? player[key].total.toStr() : player.thru.replace("*", ""))
+    }
+    row.update({
+      golfer: golfer
+    })
+    rows.push(row)
+    lastPlace = player.pos
+  end for
+  m.body.removeChildrenIndex(10, 3)
+  m.body.appendChildren(rows)
+end function
+
+function getRoundId(scores)
+  index = -1
+  split = scores.data.currentRound.split("")
+  for i = 0 to 3
+    if split[i] = "1" then
+      index = i + 1
+    end if
+  end for
+  if index = -1 then
+    return invalid
+  end if
+  return index
+end function

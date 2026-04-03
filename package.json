@@ -1,0 +1,17 @@
+{
+  "name": "roku-masters-app",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx bsc --package"
+  },
+  "author": "",
+  "license": "GPL-3.0-only",
+  "description": "",
+  "dependencies": {
+    "brighterscript": "^0.71.0",
+    "brighterscript-xml-plugin": "^0.3.2",
+    "html-to-image": "^1.11.13",
+    "htmlparser": "^1.7.7"
+  }
+}

@@ -1,0 +1,30 @@
+<component name="PillText"
+           extends="Group"
+           >
+  <interface>
+
+    <field id="text"
+           type="string"
+           />
+    <field id="textSize"
+           alias="label.fontSize"
+           />
+    <field id="textColor"
+           alias="label.color"
+           />
+    <field id="textWeight"
+           alias="label.fontWeight"
+           />
+    <field id="background"
+           alias="poster.blendColor"
+           />
+  </interface>
+  <children>
+    <Poster id="poster"
+            uri="pkg:/images/{res}/rounded-rect-20px.9.png"
+            />
+    <SimpleLabel id="label"
+                 color="#000000"
+                 />
+  </children>
+</component>

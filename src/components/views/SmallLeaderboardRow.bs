@@ -1,0 +1,31 @@
+function init()
+  m.place = m.top.findNode("place")
+  m.name = m.top.findNode("name")
+  m.score = m.top.findNode("score")
+  m.thru = m.top.findNode("thru")
+  m.thru2 = m.top.findNode("thru2")
+  m.teetime = m.top.findNode("teetime")
+  m.top.observeFieldScoped("golfer", "onGolfer")
+end function
+
+function onGolfer()
+  golfer = m.top.golfer
+  m.place.text = golfer.place.replace("T", "")
+  m.name.text = golfer.name
+  m.score.text = golfer.score
+  if len(golfer.thru) > 2 then
+    m.thru.visible = false
+    m.thru2.visible = false
+    m.teetime.visible = true
+    m.teetime.text = golfer.thru
+  else
+    thruParts = golfer.thru.toStr().trim().split("")
+    m.thru.visible = true
+    m.thru.visible = true
+    m.teetime.visible = false
+    m.thru.text = thruParts[0]
+    m.thru.color = val(golfer.thru, 10) > 18 ? "#cd2b2bff" : "#1C1E1F"
+    m.thru2.text = thruParts[1]
+    m.thru2.color = val(golfer.thru, 10) > 18 ? "#cd2b2bff" : "#1C1E1F"
+  end if
+end function

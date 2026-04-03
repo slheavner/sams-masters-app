@@ -1,0 +1,81 @@
+<component name="VideoLeaderboardRow"
+           extends="Group"
+           >
+  <interface>
+    <field id="itemContent"
+           type="node"
+           />
+    <field id="width"
+           type="float"
+           />
+    <field id="height"
+           type="float"
+           />
+    <field id="focusPercent"
+           type="float"
+           />
+    <field id="listHasFocus"
+           type="boolean"
+           />
+  </interface>
+  <children>
+    <Rectangle id="background"
+               color="#138A60"
+               opacity="0"
+               />
+    <LayoutGroup layoutDirection="horiz">
+      <Rectangle width="10" />
+      <SimpleLabel id="place"
+                   color="#138A60"
+                   fontWeight="bold"
+                   fontSize="40"
+                   width="75"
+                   />
+      <SimpleLabel id="name"
+                   width="400"
+                   color="#1C1E1F"
+                   fontSize="40"
+                   fontWeight="bold"
+                   />
+      <Rectangle width="10" />
+      <SimpleLabel id="score"
+                   fontWeight="bold"
+                   width="90"
+                   horizAlign="center"
+                   color="#1C1E1F"
+                   fontSize="40"
+                   />
+      <Rectangle width="18" />
+      <Rectangle width="56"
+                 height="56"
+                 color="#00000000"
+                 >
+        <SimpleLabel id="teetime"
+                     color="#1C1E1F"
+                     horizAlign="center"
+                     vertAlign="center"
+                     fontWeight="regular"
+                     fontSize="20"
+                     height="56"
+                     />
+        <SimpleLabel id="thru"
+                     color="#1C1E1F"
+                     horizAlign="center"
+                     width="28"
+                     fontWeight="bold"
+                     fontSize="40"
+                     />
+        <SimpleLabel id="thru2"
+                     translation="[28,0]"
+                     horizAlign="center"
+                     color="#1C1E1F"
+                     width="28"
+                     fontWeight="bold"
+                     fontSize="40"
+                     />
+      </Rectangle>
+      <Rectangle width="10" />
+
+    </LayoutGroup>
+  </children>
+</component>

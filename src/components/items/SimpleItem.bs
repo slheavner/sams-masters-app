@@ -1,0 +1,41 @@
+
+sub init()
+  m.poster = m.top.findNode("poster")
+  m.gradient = m.top.findNode("gradient")
+  m.title = m.top.findNode("title")
+  m.onAir = m.top.findNode("onAir")
+end sub
+
+sub itemContentChanged()
+  itemData = m.top.itemContent
+  m.poster.uri = itemData.hdPosterUrl
+  m.title.text = itemData.title
+  width = m.top.width
+  height = m.top.height
+  labelHeight = 40
+  m.poster.width = width
+  m.poster.height = height
+  m.gradient.width = width
+  m.gradient.height = height / 2
+  m.gradient.translation = [0, height / 2]
+  m.title.width = width
+  m.title.translation = [12, height - 40]
+  m.onAir.visible = itemData.live
+  if itemData.live
+    if itemData.active = true then
+      m.onAir.update({
+        text: "ON AIR"
+        textColor: "#ffffff"
+        background: "#A90024"
+      })
+    else
+      m.onAir.update({
+        text: "OFF AIR"
+        textColor: "#1d1b1bff"
+        background: "#ffffffc6"
+      })
+    end if
+    m.onAir.translation = [width - (m.onAir.boundingRect().width), 20]
+  end if
+
+end sub

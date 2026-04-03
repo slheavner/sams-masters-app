@@ -1,0 +1,38 @@
+<component name="SimpleItem"
+           extends="Group"
+           >
+
+  <interface>
+    <field id="itemContent"
+           type="node"
+           onChange="itemContentChanged"
+           />
+    <field id="width"
+           type="float"
+           />
+    <field id="height"
+           type="float"
+           />
+  </interface>
+  <children>
+    <Poster id="poster"
+            loadDisplayMode="limitSize"
+            />
+
+    <PillText id="onAir"
+              text="On Air"
+              textSize="18"
+              textWeight="bold"
+              textColor="#A90024"
+              />
+
+    <Poster id="gradient"
+            uri="pkg:/images/gradient.png"
+            loadDisplayMode="scaleToFill"
+            />
+    <SimpleLabel id="title"
+                 horizAlign="left"
+                 />
+  </children>
+
+</component>

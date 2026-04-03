@@ -1,0 +1,48 @@
+import "pkg:/components/api/MastersApi.bs"
+
+function init()
+
+  m.port = createObject("roMessagePort")
+  m.top.observeFieldScoped("nextRequest", m.port)
+  m.api = new MastersApi()
+  m.top.functionName = "startService"
+  m.top.control = "run"
+end function
+
+
+function startService()
+  while true
+    msg = wait(0, m.port)
+    if msg <> invalid then
+      nextRequest = msg.getData()
+      m.api[nextRequest.fn](nextRequest)
+    end if
+  end while
+end function
+
+function getLiveStreams(ignored)
+  p = createObject("roSGNode", "PromiseNode")
+  m.top.nextRequest = {
+    fn: "getLiveStreams"
+    promise: p
+  }
+  return p
+end function
+
+function getVideoVault(ignored)
+  p = createObject("roSGNode", "PromiseNode")
+  m.top.nextRequest = {
+    fn: "getVideoVault"
+    promise: p
+  }
+  return p
+end function
+
+function getScores(ignored)
+  p = createObject("roSGNode", "PromiseNode")
+  m.top.nextRequest = {
+    fn: "getScores"
+    promise: p
+  }
+  return p
+end function

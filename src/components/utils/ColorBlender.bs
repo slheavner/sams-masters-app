@@ -1,0 +1,32 @@
+class ColorBlender
+  zeroColor as object
+  fullColor as object
+
+  function new(zeroColor as string, fullColor as string)
+    m.zeroColor = m.hexColorAsRgba(zeroColor)
+    m.fullColor = m.hexColorAsRgba(fullColor)
+  end function
+
+  function hexColorAsRgba(color as string)
+    color = color.replace("#", "")
+    colorSplit = color.split("")
+    bytes = []
+    while colorSplit.count() > 0
+      bytes.push(val(colorSplit.shift() + colorSplit.shift(), 16))
+    end while
+    if bytes.count() = 3 then
+      bytes.push(255)
+    end if
+    return bytes
+  end function
+
+  function getBlendedColor(percent as float) as string
+    blended = createObject("roByteArray")
+    for i = 0 to m.zeroColor.count() - 1
+      zeroByte = m.zeroColor[i]
+      fullByte = m.fullColor[i]
+      blended.push(cint(zeroByte + (fullByte - zeroByte) * percent))
+    end for
+    return "#" + blended.toHexString()
+  end function
+end class

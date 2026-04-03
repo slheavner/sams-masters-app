@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug",
+      "envFile": "${workspaceFolder}/.env",
+      "type": "brightscript",
+      "preLaunchTask": "Build",
+      "request": "launch",
+      "host": "${env:roku_host}",
+      "password": "${env:roku_pass}",
+      "rootDir": "${workspaceFolder}/.stage",
+      "injectRdbOnDeviceComponent": true,
+      "sourceDirs": [
+        "${workspaceFolder}/src"
+      ],
+      "enableSourceMaps": true
+    }
+  ],
+  "compounds": []
+}

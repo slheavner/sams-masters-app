@@ -1,0 +1,12 @@
+<component name="MastersApiService"
+           extends="Task"
+           >
+  <interface>
+    <field id="nextRequest"
+           type="assocarray"
+           />
+    <function name="getLiveStreams" />
+    <function name="getVideoVault" />
+    <function name="getScores" />
+  </interface>
+</component>

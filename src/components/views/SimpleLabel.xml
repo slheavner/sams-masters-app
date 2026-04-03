@@ -1,0 +1,24 @@
+<component name="SimpleLabel"
+           extends="Label"
+           >
+  <interface>
+    <field id="fontSize"
+           type="float"
+           value="40"
+           />
+    <field id="fontName"
+           type="string"
+           value="benton"
+           />
+    <field id="fontWeight"
+           type="string"
+           value="regular"
+           />
+  </interface>
+  <children>
+    <Font role="font"
+          size="32"
+          uri="pkg:/fonts/benton-regular.ttf"
+          />
+  </children>
+</component>

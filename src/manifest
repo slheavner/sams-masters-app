@@ -1,0 +1,13 @@
+title=Sam's Masters App
+
+major_version=1
+minor_version=0
+build_version=0
+ui_resolutions=fhd
+uri_resolution_autosub={res},sd,hd,fhd
+mm_icon_focus_hd=pkg:/images/icon.png
+mm_icon_focus_sd=pkg:/images/icon.png
+splash_screen_hd=pkg:/images/splash.png
+splash_screen_sd=pkg:/images/splash.png
+splash_color=#ffffff
+splash_min_time=1
