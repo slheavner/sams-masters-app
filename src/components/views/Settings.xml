@@ -1,0 +1,30 @@
+<component name="Settings"
+           extends="Group"
+           >
+  <interface>
+    <field id="disableHDR"
+           type="string"
+           />
+  </interface>
+  <children>
+    <Rectangle width="1920"
+               height="1080"
+               color="#ffffff"
+               >
+      <LayoutGroup layoutDirection="horiz"
+                   translation="[100, 100]"
+                   >
+        <SimpleLabel text="Disable HDR (helps with washed out colors)"
+                     color="#173A26"
+                     width="800"
+                     />
+        <Rectangle width="20"></Rectangle>
+        <SimpleButton id="disableHDR"
+                      text="true"
+                      ></SimpleButton>
+      </LayoutGroup>
+
+    </Rectangle>
+  </children>
+
+</component>

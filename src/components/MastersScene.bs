@@ -3,11 +3,17 @@ function init()
   m.video = m.top.findNode("video")
   m.app = m.top.findNode("app")
   m.hint = m.top.findNode("hint")
+  m.settings = m.top.findNode("settings")
+  m.settingsButton = m.top.findNode("settingsButton")
   m.leaderboard = m.top.findNode("leaderboard")
   m.videoLeaderboard = m.top.findNode("videoLeaderboard")
   m.videoLeaderboard.observeFieldScoped("focusedChild", "onVideoLeaderboardFocused")
   m.video.observeFieldScoped("focusedChild", "onVideoFocused")
   m.video.observeFieldScoped("state", "onVideoStateChanged")
+  m.video.observeFieldScoped("streamingSegment", "onStreamingSegment")
+  m.settings.observeFieldScoped("disableHdr", "onDisableHdrChanged")
+
+  m.settingsButton.observeFieldScoped("selected", "onSettingsButtonSelected")
 
   m.button = m.top.findNode("button")
   m.video.trickplayBar.update({
@@ -30,11 +36,22 @@ function init()
   m.hintTimer.observeFieldScoped("fire", "onHintFire")
   m.liveTimer = createObject("roSGNode", "Timer")
   m.liveTimer.update({
-    duration: "15"
+    duration: "30"
     repeat: "true"
     control: "start"
   })
   m.liveTimer.observeFieldScoped("fire", "onTimerFire")
+end function
+
+function onSettingsButtonSelected()
+  m.settings.visible = true
+  m.settings.setFocus(true)
+end function
+
+function onStreamingSegment()
+  if m.video.streamingSegment?.segTypeStr = "video" then
+    ? "Streaming segment: ", m.video.streamingSegment
+  end if
 end function
 
 function onVideoLeaderboardFocused()
@@ -52,11 +69,17 @@ function onVideoLeaderboardFocused()
 end function
 
 function onVideoStateChanged()
-  if m.video.state = "error" and m.video.content?.backupUrl <> invalid and m.video.content?.backupUrl <> ""then
-    m.video.content.url = m.video.content.backupUrl
-    m.video.content.backupUrl = ""
-    m.video.control = "stop"
-    m.video.control = "play"
+  if m.video.state = "error" then
+    if m.video.content.cdns <> invalid then
+      cdns = m.video.content.cdns
+      if cdns.count() > 0 then
+        nextCdn = cdns.shift()
+        m.video.content.url = nextCdn
+        m.video.content.cdns = cdns
+        m.video.control = "stop"
+        m.video.control = "play"
+      end if
+    end if
   end if
 end function
 
@@ -90,6 +113,19 @@ function onTimerFire()
   m.api@.getScores().observeFieldScoped("resolve", "onScores")
 end function
 
+function onDisableHdrChanged()
+  if m.video.content <> invalid and m.video.content.manifest <> invalid then
+    onManifest({
+      content: m.video.content
+      getData: function() as object
+        return {
+          content: m.content
+        }
+      end function
+    })
+  end if
+end function
+
 function onUpdateLiveStreams(event)
   row = parseLiveStreams(event)
   for each item in row.getChildren(-1, 0)
@@ -120,7 +156,7 @@ function onUpdateLiveStreams(event)
       m.livefeeds.content.removeChild(child)
     end if
   end for
-  reorderLiveStreams()
+  ' reorderLiveStreams()
 end function
 
 function reorderLiveStreams()
@@ -163,6 +199,7 @@ function parseLiveStreams(event)
   content = createObject("roSGNode", "ContentNode")
   content.title = "Live Streams"
 
+
   for each channel in response.channels
 
     node = createObject("roSGNode", "ContentNode")
@@ -173,19 +210,19 @@ function parseLiveStreams(event)
     node.shortDescriptionLine1 = channel.carousel_header
     node.shortDescriptionLine2 = channel.carousel_title
     node.playStart = 999999
-    backupUrl = invalid
-    ' Map the first available desktop URL as the stream URL
-    if channel.desktop <> invalid and channel.desktop.count() > 0
-      node.url = channel.desktop[0].url
-      if channel.desktop[1] <> invalid then
-        backupUrl = channel.desktop[1].url
+    ' node.maxBandwidth = 1100
+    cdns = []
+    for each cdn in channel.desktop
+      if node.url = invalid or node.url = "" then
+        node.url = cdn.url
+      else
+        cdns.push(cdn.url)
       end if
-    else
-    end if
+    end for
     node.live = true
     node.addFields({
       active: channel.live
-      backupUrl: backupUrl
+      cdns: cdns
     })
     if node.id <> "radio"
       content.insertChild(node, 0)
@@ -235,23 +272,76 @@ end function
 
 function onRowItemSelected(event)
   index = event.getData()
+  m.video.content = invalid
   content = m.livefeeds.content.getChild(index[0]).getChild(index[1]).clone(false)
+  if content.live = true then
+    m.api@.getManifest(content).observeFieldScoped("resolve", "onManifest")
+  else
+    m.video.content = content
+    m.video.control = "play"
+    onButtonSelected()
+  end if
+end function
+
+function onManifest(event)
+  content = event.getData()?.content
+  if content = invalid then
+    return 0
+  end if
+  if m.settings.disableHDR = "true" then
+    hdrBandwidth = 0
+    for each variant in content.manifest.variants
+      if variant["VIDEO-RANGE"] = "SDR" then
+        avgBandwidth = fix(val(variant["AVERAGE-BANDWIDTH"]) / 1000)
+        if avgBandwidth > hdrBandwidth then
+          hdrBandwidth = avgBandwidth
+        end if
+      end if
+    end for
+    content.maxBandwidth = hdrBandwidth
+  else
+    content.maxBandwidth = 99999
+  end if
   m.video.content = content
   m.video.control = "play"
+  if m.settings.isInFocusChain() then
+    return 0
+  end if
   onButtonSelected()
 end function
 
-
 function onKeyEvent(key, press) as boolean
   if press then
+    if key = "options" then
+      m.settings.visible = true
+      m.settings.setFocus(true)
+      return true
+    end if
     if key = "up" then
-      if m.livefeeds.isInFocusChain() and m.button.visible then
-        m.button.setFocus(true)
+      if m.button.isInFocusChain() then
+        m.settingsButton.setFocus(true)
         return true
+      end if
+      if m.livefeeds.isInFocusChain() then
+        if m.button.visible then
+          m.button.setFocus(true)
+          return true
+        else
+          m.settingsButton.setFocus(true)
+          return true
+        end if
       end if
     end if
     if key = "down" then
       if m.button.isInFocusChain() then
+        m.livefeeds.setFocus(true)
+        return true
+      end if
+      if m.settingsButton.isInFocusChain() then
+        if m.button.visible then
+          m.button.setFocus(true)
+          return true
+        end if
         m.livefeeds.setFocus(true)
         return true
       end if
@@ -268,6 +358,15 @@ function onKeyEvent(key, press) as boolean
       end if
       if m.videoLeaderboard.isInFocusChain() then
         m.video.setFocus(true)
+        return true
+      end if
+      if m.livefeeds.isInFocusChain() and m.video.content <> invalid then
+        onButtonSelected()
+        return true
+      end if
+      if m.settings.isInFocusChain() then
+        m.settings.visible = false
+        m.livefeeds.setFocus(true)
         return true
       end if
     end if

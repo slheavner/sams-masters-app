@@ -67,8 +67,14 @@
                         visible="false"
                         translation="[1620, 650]"
                         />
+      <SimpleButton id="settingsButton"
+                    text="Settings"
+                    translation="[1500, 50]"
+                    ></SimpleButton>
+      <Settings id="settings"
+                visible="false"
+                ></Settings>
     </Group>
-
   </children>
 
 </component>

@@ -29,6 +29,30 @@ class MastersApi
     request.promise.resolve = parseJson(response ?? "")
   end function
 
+  function getManifest(request)
+    response = m.send({
+      url: request.content.url
+    })
+    r = response ?? ""
+    manifest = { variants: [] }
+    for each line in r.split(chr(10))
+      if line.startsWith("#EXT-X-STREAM-INF:") then
+        variant = {}
+        parts = line.replace("#EXT-X-STREAM-INF:", "")
+        rx = createObject("roRegex", `([\\w-]+)="?([^",]+)"?,`, "i")
+        kvs = rx.matchAll(parts)
+        for each kv in kvs
+          variant[kv[1]] = kv[2]
+        end for
+        manifest.variants.push(variant)
+      end if
+    end for
+    request.content.addFields({
+      manifest: manifest
+    })
+    request.promise.resolve = { content: request.content }
+  end function
+
   function send(request)
     roRequest = createObject("roUrlTransfer")
     roRequest.setUrl(request.url)

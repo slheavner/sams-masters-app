@@ -46,3 +46,13 @@ function getScores(ignored)
   }
   return p
 end function
+
+function getManifest(content)
+  p = createObject("roSGNode", "PromiseNode")
+  m.top.nextRequest = {
+    fn: "getManifest"
+    promise: p
+    content: content
+  }
+  return p
+end function

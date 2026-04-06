@@ -1,0 +1,31 @@
+function init()
+  m.disableHdr = m.top.findNode("disableHdr")
+  m.top.observeFieldScoped("focusedChild", "onFocusedChild")
+  m.top.observeFieldScoped("disableHdr", "onDisableHdrChanged")
+  m.disableHdr.observeFieldScoped("selected", "onDisableHdrSelected")
+  m.top.disableHDR = read("disableHdr") ?? "true"
+end function
+
+function onDisableHdrSelected()
+  m.top.disableHDR = m.top.disableHDR = "true" ? "false" : "true"
+  write("disableHdr", m.top.disableHDR)
+end function
+
+function onDisableHdrChanged()
+  m.disableHdr.text = m.top.disableHDR
+end function
+
+function onFocusedChild()
+  if m.top.isInFocusChain() then
+    m.disableHdr.setFocus(true)
+  end if
+end function
+
+function read(key)
+  return createObject("roRegistrySection", "Settings").read(key)
+end function
+
+function write(key, value)
+  createObject("roRegistrySection", "Settings").write(key, value)
+  m.top[key] = value
+end function

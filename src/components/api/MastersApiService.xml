@@ -8,5 +8,6 @@
     <function name="getLiveStreams" />
     <function name="getVideoVault" />
     <function name="getScores" />
+    <function name="getManifest" />
   </interface>
 </component>
