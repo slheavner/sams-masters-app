@@ -221,12 +221,8 @@ function parseLiveStreams(event)
       active: channel.live
       cdns: cdns
     })
-    if m.livefeeds.content <> invalid then
 
-      content.appendChild(node)
-    else
-      content.insertChild(node, 0)
-    end if
+    content.appendChild(node)
 
   end for
   return content
