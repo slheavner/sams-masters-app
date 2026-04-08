@@ -58,6 +58,7 @@ class MastersApi
     roRequest.setUrl(request.url)
     roRequest.SetCertificatesFile("common:/certs/ca-bundle.crt")
     roRequest.initClientCertificates()
+    roRequest.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
     roRequest.setMessagePort(m.port)
     roRequest.asyncGetToString()
     msg = wait(10000, roRequest.getMessagePort())
