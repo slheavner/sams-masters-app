@@ -8,7 +8,7 @@ class MastersApi
 
   function getScores(request)
     response = m.send({
-      url: `${m.baseUrl}/en_US/cms/feeds/2026/scores.json`
+      url: `${m.baseUrl}/en_US/scores/feeds/2026/scores.json`
       ' url: "https://www.anwagolf.com/en_US/scores/feeds/2026/scores.json"
     })
     request.promise.resolve = parseJson(response ?? "")
@@ -59,6 +59,8 @@ class MastersApi
     roRequest.SetCertificatesFile("common:/certs/ca-bundle.crt")
     roRequest.initClientCertificates()
     roRequest.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    roRequest.addHeader("Accept", "application/json, text/plain, */*")
+    roRequest.addHeader("Referrer", "https://www.masters.com/index.html")
     roRequest.setMessagePort(m.port)
     roRequest.asyncGetToString()
     msg = wait(10000, roRequest.getMessagePort())

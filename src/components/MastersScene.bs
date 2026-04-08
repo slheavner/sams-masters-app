@@ -17,7 +17,7 @@ function init()
   videoAgent.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
   m.settings.observeFieldScoped("disableHdr", "onDisableHdrChanged")
   m.video.timedMetaDataSelectionKeys = ["*"]
-  m.video.observeFieldScoped("timedMetaData2", "onVideoEvent")
+  ' m.video.observeFieldScoped("timedMetaData2", "onVideoEvent")
   m.settingsButton.observeFieldScoped("selected", "onSettingsButtonSelected")
 
   m.button = m.top.findNode("button")
@@ -74,8 +74,14 @@ function onVideoLeaderboardFocused()
 end function
 
 function onVideoEvent()
-  if m.video.timedMetaData2.data.id <> 2147483647 then
-    ? "Video event: ", formatJson(m.video.timedMetaData2)
+  ba = createObject("roByteArray")
+  ba.fromHexString(m.video.timedMetaData2.data.messageDataBase16)
+  s = ""
+  for each b in ba
+    s += chr(b)
+  end for
+  if s.inStr("timestamp.utc") < 0 then
+    ? "Video event: ", s, formatJson(m.video.timedMetaData2)
   end if
 end function
 
