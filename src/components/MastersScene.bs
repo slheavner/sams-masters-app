@@ -4,6 +4,8 @@ function init()
   m.app = m.top.findNode("app")
   m.hint = m.top.findNode("hint")
   m.settings = m.top.findNode("settings")
+
+  m.livefeeds = m.top.findNode("livefeeds")
   m.settingsButton = m.top.findNode("settingsButton")
   m.leaderboard = m.top.findNode("leaderboard")
   m.videoLeaderboard = m.top.findNode("videoLeaderboard")
@@ -137,8 +139,8 @@ end function
 
 function onUpdateLiveStreams(event)
   row = parseLiveStreams(event)
-  for each item in row.getChildren(-1, 0)
-    found = invalid
+  for i = 0 to row.getChildCount() - 1
+    item = row.getChild(i)
     for each child in m.livefeeds.content.getChild(0).getChildren(-1, 0)
       if child.id = item.id then
         fields = item.getFields()
@@ -149,21 +151,7 @@ function onUpdateLiveStreams(event)
         exit for
       end if
     end for
-    if found = invalid then
-      m.livefeeds.content.appendChild(item)
-    end if
-  end for
-  for each child in m.livefeeds.content.getChild(0).getChildren(-1, 0)
-    found = invalid
-    for each item in row.getChildren(-1, 0)
-      if child.id = item.id then
-        found = child
-        exit for
-      end if
-    end for
-    if found = invalid then
-      m.livefeeds.content.removeChild(child)
-    end if
+    m.livefeeds.content.getChild(0).insertChild(found, i)
   end for
   ' reorderLiveStreams()
 end function
@@ -233,7 +221,12 @@ function parseLiveStreams(event)
       active: channel.live
       cdns: cdns
     })
-    content.appendChild(node)
+    if m.livefeeds.content <> invalid then
+
+      content.appendChild(node)
+    else
+      content.insertChild(node, 0)
+    end if
 
   end for
   return content
@@ -241,7 +234,6 @@ end function
 
 function onLiveStreams(event)
   m.root.appendChild(parseLiveStreams(event))
-  m.livefeeds = m.top.findNode("livefeeds")
   getVideoVault()
 end function
 
