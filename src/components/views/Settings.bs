@@ -1,9 +1,15 @@
 function init()
   m.disableHdr = m.top.findNode("disableHdr")
   m.top.observeFieldScoped("focusedChild", "onFocusedChild")
-  m.top.observeFieldScoped("disableHdr", "onDisableHdrChanged")
-  m.disableHdr.observeFieldScoped("selected", "onDisableHdrSelected")
+  m.top.favorites = read("favorites") = "" ? [] : parseJson(read("favorites"))
   m.top.disableHDR = read("disableHdr") = "" ? "true" : read("disableHdr")
+  m.top.observeFieldScoped("disableHdr", "onDisableHdrChanged")
+  m.top.observeFieldScoped("favorites", "onFavoritesChanged")
+  m.disableHdr.observeFieldScoped("selected", "onDisableHdrSelected")
+end function
+
+function onFavoritesChanged()
+  write("favorites", formatJson(m.top.favorites))
 end function
 
 function onDisableHdrSelected()

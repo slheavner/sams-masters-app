@@ -23,13 +23,21 @@
                color="#138A60"
                opacity="0"
                />
-    <LayoutGroup layoutDirection="horiz">
-      <Rectangle width="10" />
+    <Rectangle id="favoritesSpacer"
+               height="2"
+               visible="false"
+               color="#173A26"
+               ></Rectangle>
+    <LayoutGroup id="layout"
+                 layoutDirection="horiz"
+                 vertAlignment="center"
+                 >
+      <Rectangle width="9" />
       <SimpleLabel id="place"
                    color="#138A60"
                    fontWeight="bold"
                    fontSize="40"
-                   width="75"
+                   width="90"
                    />
       <SimpleLabel id="name"
                    width="400"
@@ -47,7 +55,6 @@
                    />
       <Rectangle width="18" />
       <Rectangle width="56"
-                 height="56"
                  color="#00000000"
                  >
         <SimpleLabel id="teetime"
@@ -56,7 +63,6 @@
                      vertAlign="center"
                      fontWeight="regular"
                      fontSize="20"
-                     height="56"
                      />
         <SimpleLabel id="thru"
                      color="#1C1E1F"
@@ -74,8 +80,19 @@
                      fontSize="40"
                      />
       </Rectangle>
-      <Rectangle width="10" />
-
+      <Rectangle width="12" />
+      <Rectangle width="36"
+                 height="42"
+                 color="#00000000"
+                 >
+        <Poster id="star"
+                width="36"
+                height="36"
+                loadDisplayMode="scaleToFit"
+                blendColor="#0B5637"
+                uri="pkg:/images/star.png"
+                />
+      </Rectangle>
     </LayoutGroup>
   </children>
 </component>

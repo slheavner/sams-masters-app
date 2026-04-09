@@ -7,6 +7,9 @@ function init()
   m.name = m.top.findNode("name")
   m.score = m.top.findNode("score")
   m.thru = m.top.findNode("thru")
+  m.favoritesSpacer = m.top.findNode("favoritesSpacer")
+  m.layout = m.top.findNode("layout")
+  m.star = m.top.findNode("star")
   m.thru2 = m.top.findNode("thru2")
   m.teetime = m.top.findNode("teetime")
   m.top.observeFieldScoped("itemContent", "onGolfer")
@@ -21,7 +24,10 @@ function onGolfer()
   m.place.text = golfer.place
   m.name.text = golfer.name
   m.score.text = golfer.score
+  m.favoritesSpacer.visible = golfer.isLastFavorite = true
   thruParts = golfer.thru.toStr().trim().split("")
+  m.star.opacity = golfer.isFavoriteInSettings = true ? 1 : 0
+  m.star.blendColor = golfer.isFavoriteInSettings = true ? "#173A26" : "#EFEFEF"
   if len(golfer.thru) > 2 then
     m.thru.visible = false
     m.thru2.visible = false
@@ -37,16 +43,22 @@ function onGolfer()
     m.thru2.text = thruParts[1]
     m.thru2.color = val(golfer.thru, 10) > 18 ? "#cd2b2bff" : "#1C1E1F"
   end if
+  onFocusPercent()
 end function
 
 function onSize()
   m.background.width = m.top.width
   m.background.height = m.top.height
+  m.layout.translation = [0, m.top.height / 2 + 2]
+  m.favoritesSpacer.width = m.top.width
+  m.favoritesSpacer.translation = [0, m.top.height - m.favoritesSpacer.height]
 end function
 
 function onFocusPercent()
   percent = m.top.listHasFocus ? m.top.focusPercent : 0
   m.background.opacity = percent
   m.place.color = m.blender.getBlendedColor(percent)
-
+  if m.top.itemContent?.isFavoriteInSettings <> true then
+    m.star.opacity = percent * 0.2
+  end if
 end function

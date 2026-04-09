@@ -5,6 +5,9 @@
     <field id="disableHDR"
            type="string"
            />
+    <field id="favorites"
+           type="array"
+           />
   </interface>
   <children>
     <Rectangle width="1920"

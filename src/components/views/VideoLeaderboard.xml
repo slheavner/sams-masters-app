@@ -40,6 +40,13 @@
                     vertFocusAnimationStyle="floatingFocus"
                     itemComponentName="VideoLeaderboardRow"
                     />
+        <SimpleLabel fontSize="25"
+                     color="#1C1E1F"
+                     width="736"
+                     horizAlign="center"
+                     text="press OK to favorite"
+                     translation="[0, 1030]"
+                     />
       </Group>
     </Rectangle>
   </children>

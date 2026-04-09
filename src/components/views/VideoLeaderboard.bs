@@ -5,6 +5,29 @@ function init()
   m.top.observeFieldScoped("scores", "onScores")
   m.top.observeFieldScoped("focusedChild", "onFocusedChild")
   m.list.observeFieldScoped("itemFocused", "onItemFocused")
+  m.list.observeFieldScoped("itemSelected", "onItemSelected")
+end function
+
+function onItemSelected()
+  item = m.list.content.getChild(m.list.itemSelected)
+  settings = m.top.getScene().findNode("settings")
+  if item.isFavoriteInSettings = true then
+    newFaves = []
+    for each favorite in settings.favorites
+      if favorite <> item.id.replace("F", "")
+        newFaves.push(favorite)
+      end if
+    end for
+    settings.favorites = newFaves
+  else
+    newFaves = []
+    for each favorite in settings.favorites
+      newFaves.push(favorite)
+    end for
+    newFaves.push(item.id)
+    settings.favorites = newFaves
+  end if
+  onScores()
 end function
 
 function onItemFocused()
@@ -21,9 +44,11 @@ end function
 
 function onScores()
   content = scoresToNodes()
+  tops = []
   if m.list.content <> invalid then
     reorderMap = []
     for each child in content.getChildren(-1, 0)
+      found = false
       for each row in m.list.content.getChildren(-1, 0)
         if row.id = child.id then
           fields = child.getFields()
@@ -31,9 +56,13 @@ function onScores()
           fields.delete("focusedChild")
           row.update(fields)
           reorderMap.push(row)
+          found = true
           exit for
         end if
       end for
+      if found = false then
+        reorderMap.push(child)
+      end if
     end for
     if m.newIndex <> invalid then
       m.list.animateToItem = m.newIndex
@@ -47,6 +76,8 @@ function onScores()
 end function
 
 function scoresToNodes() as object
+  settings = m.top.getScene().findNode("settings")
+  favorites = settings.favorites
   scores = m.top.scores
   roundId = getRoundId(scores)
   if roundId = invalid then
@@ -60,12 +91,18 @@ function scoresToNodes() as object
   root.title = `Round ${roundId}`
   key = `round${roundId}`
   lastPlace = "-1"
+  faveItems = []
   for i = 0 to scores.data.player.count() - 1
     player = scores.data.player[i]
+    isFavorite = false
+    mc = player.status = "C"
+    for each favorite in favorites
+      if favorite = player.id.replace("F", "")
+        isFavorite = true
+        exit for
+      end if
+    end for
     row = createObject("roSGNode", "ContentNode")
-    if currentPlayer <> invalid and player.id = currentPlayer
-      m.newIndex = i
-    end if
     golfer = {
       id: player.id
       place: player.pos = lastPlace ? "" : player.pos.replace("T", "")
@@ -73,11 +110,38 @@ function scoresToNodes() as object
       score: player.topar
       thru: player[key].roundStatus = "Pre" ? player[key].teetime : ((player.thru = "F" or player.thru = "F*") and player[key].total <> invalid ? player[key].total.toStr() : player.thru.replace("*", ""))
       playerData: player
+      isFavoriteInSettings: isFavorite
     }
+    if mc then
+      golfer.thru = ""
+      if lastPlace <> "MC" then
+        golfer.place = "MC"
+        lastPlace = "MC"
+      else
+        golfer.place = ""
+      end if
+    end if
     row.update(golfer, true)
+    if (isFavorite) then
+      crow = row.clone(false)
+      crow.update({ id: row.id + "F", isFavorite: true, place: player.pos, isLastFavorite: false }, true)
+      faveItems.push(crow)
+    end if
     root.appendChild(row)
     lastPlace = player.pos
   end for
+  if faveItems.count() > 0 then
+    faveItems[faveItems.count() - 1].update({ isLastFavorite: true }, true)
+  end if
+  root.insertChildren(faveItems, 0)
+  if currentPlayer <> invalid then
+    for i = 0 to root.getChildren(-1, 0).count() - 1
+      if root.getChildren(-1, 0)[i].id = currentPlayer then
+        m.newIndex = i
+        exit for
+      end if
+    end for
+  end if
   return root
 end function
 

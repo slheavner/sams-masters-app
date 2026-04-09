@@ -17,6 +17,8 @@
                    text="Press DOWN for Leaderboard"
                    width="1920"
                    height="1000"
+                   visible="false"
+                   fontWeight="bold"
                    horizAlign="center"
                    vertAlign="bottom"
                    ></SimpleLabel>
