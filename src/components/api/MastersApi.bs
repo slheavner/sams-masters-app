@@ -49,7 +49,31 @@ class MastersApi
     end for
     request.content.addFields({
       manifest: manifest
+
     })
+
+    raw = ""
+    lines = r.split(chr(10))
+    for i = 0 to lines.count() - 1
+      line = lines[i]
+      if line.inStr("VIDEO-RANGE=PQ") > -1 or line.inStr("hvc1.1.6.L123.B0") > -1 then
+        i += 1
+      else
+        url = request.content.url.split("/")
+        url.pop()
+        url = url.join("/") + "/"
+        if not line.startsWith("#") and len(line.trim()) > 0 then
+          line = url + line
+        else
+          line = line.replace("URI=""", "URI=""" + url)
+        end if
+        raw += line + chr(10)
+      end if
+    end for
+    request.content.addFields({
+      raw: raw
+    })
+    request.promise.raw = raw
     request.promise.resolve = { content: request.content }
   end function
 

@@ -71,7 +71,7 @@ function scoresToNodes() as object
       place: player.pos = lastPlace ? "" : player.pos.replace("T", "")
       name: player.display_name
       score: player.topar
-      thru: player[key].roundStatus = "Pre" ? player[key].teetime : (player.thru = "F" or player.thru = "F*" and player[key].total <> invalid ? player[key].total.toStr() : player.thru.replace("*", ""))
+      thru: player[key].roundStatus = "Pre" ? player[key].teetime : ((player.thru = "F" or player.thru = "F*") and player[key].total <> invalid ? player[key].total.toStr() : player.thru.replace("*", ""))
       playerData: player
     }
     row.update(golfer, true)

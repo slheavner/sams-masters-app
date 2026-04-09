@@ -21,7 +21,7 @@ function onScores() as void
       place: player.pos = lastPlace ? "" : player.pos
       name: player.display_name
       score: player.topar
-      thru: player[key].roundStatus = "Pre" ? player[key].teetime : (player.thru = "F" or player.thru = "F*" ? player[key].total.toStr() : player.thru.replace("*", ""))
+      thru: player[key].roundStatus = "Pre" ? player[key].teetime : ((player.thru = "F" or player.thru = "F*") and player[key].total <> invalid ? player[key].total.toStr() : player.thru.replace("*", ""))
     }
     row.update({
       golfer: golfer

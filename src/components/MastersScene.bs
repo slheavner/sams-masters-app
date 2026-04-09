@@ -212,13 +212,12 @@ function parseLiveStreams(event)
     node.description = channel.caption
     node.shortDescriptionLine1 = channel.carousel_header
     node.shortDescriptionLine2 = channel.carousel_title
-    node.playStart = 999999
-    ' node.maxBandwidth = 1100
+    node.playStart = 99999999
     cdns = []
     for each cdn in channel.desktop
       if node.url = invalid or node.url = "" then
         node.url = cdn.url
-      else
+      else if cdn.distribution = 1 then
         cdns.push(cdn.url)
       end if
     end for
@@ -290,22 +289,26 @@ function onManifest(event)
   if content = invalid then
     return 0
   end if
+
   if m.settings.disableHDR = "true" then
-    hdrBandwidth = 0
-    for each variant in content.manifest.variants
-      if variant["VIDEO-RANGE"] = "SDR" then
-        avgBandwidth = fix(val(variant["AVERAGE-BANDWIDTH"]) / 1000)
-        if avgBandwidth > hdrBandwidth then
-          hdrBandwidth = avgBandwidth
-        end if
+    raw = content.raw
+    if raw <> invalid and raw <> "" then
+      writeAsciiFile("tmp:/stream.m3u8", raw)
+      sleep(500)
+      if content.realUrl = invalid then
+        content.addFields({
+          realUrl: content.url
+        })
       end if
-    end for
-    content.maxBandwidth = hdrBandwidth
-  else
-    content.maxBandwidth = 99999
+      content.url = "tmp:/stream.m3u8"
+    end if
+  else if content.realUrl <> invalid then
+    content.url = content.realUrl
   end if
+  content.playStart = 99999999
   m.video.content = content
   m.video.control = "play"
+  m.video.seek = 99999999
   if m.settings.isInFocusChain() then
     return 0
   end if

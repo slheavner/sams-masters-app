@@ -3,7 +3,7 @@ function init()
   m.top.observeFieldScoped("focusedChild", "onFocusedChild")
   m.top.observeFieldScoped("disableHdr", "onDisableHdrChanged")
   m.disableHdr.observeFieldScoped("selected", "onDisableHdrSelected")
-  m.top.disableHDR = read("disableHdr") ?? "true"
+  m.top.disableHDR = read("disableHdr") = "" ? "true" : read("disableHdr")
 end function
 
 function onDisableHdrSelected()
