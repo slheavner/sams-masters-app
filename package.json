@@ -1,6 +1,6 @@
 {
   "name": "roku-masters-app",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx bsc --package --sourceMap=false"
