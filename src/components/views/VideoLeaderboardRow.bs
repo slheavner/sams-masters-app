@@ -27,16 +27,17 @@ function onGolfer()
   m.favoritesSpacer.visible = golfer.isLastFavorite = true
   thruParts = golfer.thru.toStr().trim().split("")
   m.star.opacity = golfer.isFavoriteInSettings = true ? 1 : 0
+  m.teetime.text = ""
   m.star.blendColor = golfer.isFavoriteInSettings = true ? "#173A26" : "#EFEFEF"
   if len(golfer.thru) > 2 then
     m.thru.visible = false
     m.thru2.visible = false
     m.teetime.visible = true
-    m.teetime.text = golfer.thru
+    m.teetime.text = golfer.thru.split(" ")[0]
   else
     thruParts = golfer.thru.toStr().trim().split("")
     m.thru.visible = true
-    m.thru.visible = true
+    m.thru2.visible = true
     m.teetime.visible = false
     m.thru.text = thruParts[0]
     m.thru.color = val(golfer.thru, 10) > 18 ? "#cd2b2bff" : "#1C1E1F"
@@ -51,6 +52,7 @@ function onSize()
   m.background.height = m.top.height
   m.layout.translation = [0, m.top.height / 2 + 2]
   m.favoritesSpacer.width = m.top.width
+  m.teetime.height = m.top.height
   m.favoritesSpacer.translation = [0, m.top.height - m.favoritesSpacer.height]
 end function
 

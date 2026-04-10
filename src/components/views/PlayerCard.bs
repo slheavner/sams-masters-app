@@ -72,7 +72,7 @@ end function
 function onContent()
   content = m.top.content
   player = content.playerData
-  m.portrait.uri = `https://images.masters.com/players/2026/240x240/${content.id}.jpg`
+  m.portrait.uri = `https://images.masters.com/players/2026/240x240/${content.id.replace("F", "")}.jpg`
   m.name.text = player.full_name
   m.position.text = player.pos
   m.score.text = player.topar
