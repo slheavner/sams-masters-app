@@ -1,3 +1,9 @@
+# Archived
+
+I've been IP blocked from the Masters. (Spoiler: A simple message would have gotten me to take it down. Would have been less work too haha)
+
+---
+
 # Sam's Masters App
 
 Roku app for watching the Masters.com streams and videos with leaderboards.
